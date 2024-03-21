@@ -5,8 +5,8 @@ on:
   pull_request:
   push:
     branches:
-      - "main"
-      - "develop"
+      - 'main'
+      - 'develop'
 
 env:
   FOUNDRY_PROFILE: ci
@@ -16,29 +16,29 @@ jobs:
     strategy:
       fail-fast: true
 
-    name: Foundry project
+    name: Lint & Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           submodules: recursive
 
-      - name: "Install pnpm"
+      - name: 'Install pnpm'
         uses: pnpm/action-setup@v3
         with:
           version: 8
 
-      - name: "Install Node.js"
-        uses: "actions/setup-node@v3"
+      - name: 'Install Node.js'
+        uses: 'actions/setup-node@v3'
         with:
-          cache: "pnpm"
-          node-version: "20"
+          cache: 'pnpm'
+          node-version: '20'
 
-      - name: "Install npm dependencies"
-        run: "pnpm install"
+      - name: 'Install npm dependencies'
+        run: 'pnpm install'
 
-      - name: "Lint the contracts"
-        run: "npm run lint"
+      - name: 'Lint the contracts'
+        run: 'npm run lint'
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
