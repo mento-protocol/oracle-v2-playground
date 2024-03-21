@@ -1,0 +1,2 @@
+redstone/=lib/redstone-oracles-monorepo/packages/evm-connector/
+@openzeppelin/=lib/openzeppelin-contracts/

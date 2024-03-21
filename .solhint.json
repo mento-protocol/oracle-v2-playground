@@ -1,0 +1,30 @@
+{
+  "extends": "solhint:recommended",
+  "plugins": ["prettier"],
+  "rules": {
+    "code-complexity": ["error", 7],
+    "compiler-version": ["error", ">=0.8.24"],
+    "constructor-syntax": "error",
+    "func-visibility": ["error", { "ignoreConstructors": true }],
+    "function-max-lines": ["error", 50],
+    "func-named-parameters": ["error", 4],
+    "func-param-name-mixedcase": "error",
+    "gas-calldata-parameters": "error",
+    "gas-increment-by-one": "error",
+    "gas-indexed-events": "error",
+    "gas-length-in-loops": "error",
+    "gas-multitoken1155": "error",
+    "gas-named-return-values": "error",
+    "gas-small-strings": "error",
+    "gas-strict-inequalities": "error",
+    "gas-struct-packing": "error",
+    "interface-starts-with-i": "error",
+    "max-line-length": ["error", 120],
+    "ordering": "error",
+    "named-parameters-mapping": "error",
+    "modifier-name-mixedcase": "error",
+    "prettier/prettier": [ "error" ],
+    "private-vars-leading-underscore": ["error", {"strict":false}],
+    "reason-string": ["error", { "maxLength": 64 }]
+  }
+}
