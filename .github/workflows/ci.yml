@@ -1,6 +1,12 @@
-name: test
+name: CI
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - "main"
+      - "develop"
 
 env:
   FOUNDRY_PROFILE: ci
@@ -16,6 +22,18 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: recursive
+
+      - name: "Install Node.js"
+        uses: "actions/setup-node@v3"
+        with:
+          cache: "npm"
+          node-version: "20"
+
+      - name: "Install npm dependencies"
+        run: "npm clean-install"
+
+      - name: "Lint the contracts"
+        run: "npm run lint"
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
