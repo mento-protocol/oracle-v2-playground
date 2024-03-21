@@ -38,6 +38,7 @@ jobs:
         run: 'pnpm install'
 
       - name: 'Lint the contracts'
+        # FIXME: Solhint always exits with 0 even when there are errors, need some bash magic to force it to fail if it outputs errors
         run: 'npm run lint'
 
       - name: Install Foundry
