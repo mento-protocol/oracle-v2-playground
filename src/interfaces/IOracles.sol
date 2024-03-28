@@ -14,42 +14,6 @@ interface IOracles {
     function report(address rateFeedId) external;
 
     /**
-     * @notice Returns the median rate as a numerator and denominator, the
-     * denominator being fixed to 1e24.
-     * @param rateFeedId The rate feed whose median rate is queried.
-     * @return numerator The numerator of the median rate.
-     * @return denominator The denominator of the median rate, fixed at 1e24.
-     * @dev The denominator is chosen based on Celo's FixidityLib, which is used
-     * in the legacy SortedOracles oracle. See here:
-     * https://github.com/celo-org/celo-monorepo/blob/master/packages/protocol/contracts/common/FixidityLib.sol#L26
-     * To get the rate in this contract's internal format, and save a bit of gas
-     * on the consumer side, see `medianRateUint64`.
-     */
-    function medianRate(address rateFeedId) external view returns (uint256 numerator, uint256 denominator);
-
-    /**
-     * @notice Returns the median rate as a fixed fraction with 8 decimal digits
-     * after the decimal point.
-     * @param rateFeedId The rate feed whose median rate is queried.
-     * @return median The median rate, expressed as the numerator of a fraction
-     * over 1e8.
-     */
-    function medianRateUint64(address rateFeedId) external view returns (uint64 median);
-
-    /**
-     * @notice Returns the median rate and validity flags.
-     * @param rateFeedId The rate feed being queried.
-     * @return The median rate.
-     * @return The feed's current validity flags, packed into a uint8.
-     * Specifically:
-     * - Bit 0 (least significant): `hasFresnhess`
-     * - Bit 1: `hasQuorum`
-     * - Bit 2: `hasCertainty`
-     * - Bits 3-7: unused
-     */
-    function rateInfo(address rateFeedId) external view returns (uint64, uint8);
-
-    /**
      * @notice Sets `hasFreshness` to `false` if the most recent report has
      * become outdated.
      * @param rateFeedId The rate feed to mark stale.
@@ -73,7 +37,10 @@ interface IOracles {
      * fraction over uint16.max.
      * @dev Only callable by the owner.
      */
-    function setAllowedDeviation(address rateFeedId, uint16 allowedDeviation) external ;
+    function setAllowedDeviation(
+        address rateFeedId,
+        uint16 allowedDeviation
+    ) external;
     /**
      * @notice Sets the required quorum for a rate feed.
      * @param rateFeedId The rate feed being configured.
@@ -89,7 +56,10 @@ interface IOracles {
      * doneted as certain in a batch for it to be considered valid.
      * @dev Only callable by the owner.
      */
-    function setCertaintyThreshold(address rateFeedId, uint8 certaintyThreshold) external;
+    function setCertaintyThreshold(
+        address rateFeedId,
+        uint8 certaintyThreshold
+    ) external;
     /**
      * @notice Sets the allowed staleness for a rate feed.
      * @param rateFeedId The rate feed being configured.
@@ -97,7 +67,10 @@ interface IOracles {
      * considered stale and no longer valid.
      * @dev Only callable by the owner.
      */
-    function setAllowedStaleness(address rateFeedId, uint16 allowedStaleness) external;
+    function setAllowedStaleness(
+        address rateFeedId,
+        uint16 allowedStaleness
+    ) external;
 
     /**
      * @notice Adds a new supported rate feed.
@@ -129,4 +102,46 @@ interface IOracles {
      * @dev Only callable by the owner.
      */
     function removeProvider(address rateFeedId, address provider) external;
+
+    /**
+     * @notice Returns the median rate as a numerator and denominator, the
+     * denominator being fixed to 1e24.
+     * @param rateFeedId The rate feed whose median rate is queried.
+     * @return numerator The numerator of the median rate.
+     * @return denominator The denominator of the median rate, fixed at 1e24.
+     * @dev The denominator is chosen based on Celo's FixidityLib, which is used
+     * in the legacy SortedOracles oracle. See here:
+     * https://github.com/celo-org/celo-monorepo/blob/master/packages/protocol/contracts/common/FixidityLib.sol#L26
+     * To get the rate in this contract's internal format, and save a bit of gas
+     * on the consumer side, see `medianRateUint64`.
+     */
+    function medianRate(
+        address rateFeedId
+    ) external view returns (uint256 numerator, uint256 denominator);
+
+    /**
+     * @notice Returns the median rate as a fixed fraction with 8 decimal digits
+     * after the decimal point.
+     * @param rateFeedId The rate feed whose median rate is queried.
+     * @return median The median rate, expressed as the numerator of a fraction
+     * over 1e8.
+     */
+    function medianRateUint64(
+        address rateFeedId
+    ) external view returns (uint64 median);
+
+    /**
+     * @notice Returns the median rate and validity flags.
+     * @param rateFeedId The rate feed being queried.
+     * @return rate The median rate.
+     * @return flags The feed's current validity flags, packed into a uint8.
+     * Specifically:
+     * - Bit 0 (least significant): `hasFresnhess`
+     * - Bit 1: `hasQuorum`
+     * - Bit 2: `hasCertainty`
+     * - Bits 3-7: unused
+     */
+    function rateInfo(
+        address rateFeedId
+    ) external view returns (uint64 rate, uint8 flags);
 }
