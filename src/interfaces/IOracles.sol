@@ -91,23 +91,24 @@ interface IOracles {
     function removeRateFeed(address rateFeedId) external;
 
     /**
-     * @notice Adds a new trusted provider, i.e. a new offchain oracle node
+     * @notice Adds a new trusted data provider, i.e. a new offchain oracle node
      * operator.
      * @param rateFeedId The rate feed for which the new provider is allowed to
      * report.
      * @param provider The new provider's address.
      * @dev Only callable by the owner.
      */
-    function addProvider(address rateFeedId, address provider) external;
+    function addDataProvider(address rateFeedId, address provider) external;
 
     /**
-     * @notice Removes a provider from being allowed to report of a rate feed.
+     * @notice Removes a data provider from being allowed to report for a rate
+     * feed.
      * @param rateFeedId The rate feed for which the provider was allowed to
      * report.
      * @param provider The provider's address.
      * @dev Only callable by the owner.
      */
-    function removeProvider(address rateFeedId, address provider) external;
+    function removeDataProvider(address rateFeedId, address provider) external;
 
     /**
      * @notice Returns the median rate as a numerator and denominator, the
