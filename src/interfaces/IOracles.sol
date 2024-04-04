@@ -29,7 +29,7 @@ interface IOracles {
      * @dev Only callable by the owner.
      */
     function setWindowSize(address rateFeedId, uint8 windowSize) external;
-    
+
     /**
      * @notice Sets the allowed deviation for a rate feed.
      * @param rateFeedId The rate feed being configured.
@@ -129,18 +129,18 @@ interface IOracles {
      * @notice Returns the median rate as a fixed fraction with 8 decimal digits
      * after the decimal point.
      * @param rateFeedId The rate feed whose median rate is queried.
-     * @return median The median rate, expressed as the numerator of a fraction
+     * @return medianRate The median rate, expressed as the numerator of a fraction
      * over 1e8.
      */
     function medianRateUint64(
         address rateFeedId
-    ) external view returns (uint64 median);
+    ) external view returns (uint64 medianRate);
 
     /**
      * @notice Returns the median rate and validity flags.
      * @param rateFeedId The rate feed being queried.
-     * @return rate The median rate.
-     * @return flags The feed's current validity flags, packed into a uint8.
+     * @return medianRate The median rate.
+     * @return validityFlags The feed's current validity flags, packed into a uint8.
      * Specifically:
      * - Bit 0 (least significant): `hasFresnhess`
      * - Bit 1: `hasQuorum`
@@ -149,5 +149,5 @@ interface IOracles {
      */
     function rateInfo(
         address rateFeedId
-    ) external view returns (uint64 rate, uint8 flags);
+    ) external view returns (uint64 medianRate, uint8 validityFlags);
 }
