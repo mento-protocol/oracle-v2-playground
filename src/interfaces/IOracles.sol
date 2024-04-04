@@ -29,6 +29,7 @@ interface IOracles {
      * @dev Only callable by the owner.
      */
     function setWindowSize(address rateFeedId, uint8 windowSize) external;
+    
     /**
      * @notice Sets the allowed deviation for a rate feed.
      * @param rateFeedId The rate feed being configured.
@@ -41,6 +42,7 @@ interface IOracles {
         address rateFeedId,
         uint16 allowedDeviation
     ) external;
+
     /**
      * @notice Sets the required quorum for a rate feed.
      * @param rateFeedId The rate feed being configured.
@@ -49,17 +51,19 @@ interface IOracles {
      * @dev Only callable by the owner.
      */
     function setQuorum(address rateFeedId, uint8 quorum) external;
+
     /**
      * @notice Sets the certainty threshold for a rate feed.
      * @param rateFeedId The rate feed being configured.
      * @param certaintyThreshold The minimum number of values that need to be
-     * doneted as certain in a batch for it to be considered valid.
+     * denoted as certain in a batch for it to be considered valid.
      * @dev Only callable by the owner.
      */
     function setCertaintyThreshold(
         address rateFeedId,
         uint8 certaintyThreshold
     ) external;
+
     /**
      * @notice Sets the allowed staleness for a rate feed.
      * @param rateFeedId The rate feed being configured.
@@ -78,6 +82,7 @@ interface IOracles {
      * @dev Only callable by the owner.
      */
     function addRateFeed(address rateFeedId) external;
+
     /**
      * @notice Removes a rate feed.
      * @param rateFeedId The rate feed's ID.
@@ -94,6 +99,7 @@ interface IOracles {
      * @dev Only callable by the owner.
      */
     function addProvider(address rateFeedId, address provider) external;
+
     /**
      * @notice Removes a provider from being allowed to report of a rate feed.
      * @param rateFeedId The rate feed for which the provider was allowed to
