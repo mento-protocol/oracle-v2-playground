@@ -79,9 +79,26 @@ interface IOracles {
     /**
      * @notice Adds a new supported rate feed.
      * @param rateFeedId The new rate feed's ID.
+     * @param windowSize The new rate feed's averaging window size.
+     * @param allowedDeviation The new rate feed's allowed deviation.
+     * @param quorum The new rate feed's required minimum number of values per
+     * report.
+     * @param certaintyThreshold The new rate feed's required minimum number of
+     * certain values per report.
+     * @param allowedStaleness The new rate feed's allowed staleness.
+     * @param dataProviders The initial set of data providers for the new rate
+     * feed.
      * @dev Only callable by the owner.
      */
-    function addRateFeed(address rateFeedId) external;
+    function addRateFeed(
+        address rateFeedId,
+        uint8 windowSize,
+        uint16 allowedDeviation,
+        uint8 quorum,
+        uint8 certaintyThreshold,
+        uint16 allowedStaleness,
+        address[] calldata dataProviders
+    ) external;
 
     /**
      * @notice Removes a rate feed.
