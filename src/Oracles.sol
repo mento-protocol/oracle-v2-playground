@@ -16,21 +16,17 @@ contract Oracles is IOracles {
         uint8 lastIndex;
         uint8 windowSize;
         bool bufferFull;
-
         OracleValue windowSum;
         OracleValue windowAverage;
-
         uint40 latestTimestamp;
-
         uint8 validityFlags;
-
         uint16 allowedDeviation;
         uint8 quorum;
         uint8 certaintyThreshold;
         uint16 allowedStaleness;
     }
 
-    mapping (address => OracleBuffer) rateFeeds;
+    mapping(address => OracleBuffer) rateFeeds;
     function report(address rateFeedId) external {}
 
     function markStale(address rateFeedId) external {}
@@ -85,14 +81,20 @@ contract Oracles is IOracles {
         address rateFeedId
     ) external view returns (uint64 medianRate, uint8 validityFlags) {}
 
-    function rateFeedParameters(address rateFeedId) external view returns (
-        uint8 windowSize,
-        uint16 allowedDeviation,
-        uint8 quorum,
-        uint8 certaintyThreshold,
-        uint16 allowedStaleness
-    ) {
-        OracleBufferInfo memory bufferInfo =  rateFeeds[rateFeedId].bufferInfo;
+    function rateFeedParameters(
+        address rateFeedId
+    )
+        external
+        view
+        returns (
+            uint8 windowSize,
+            uint16 allowedDeviation,
+            uint8 quorum,
+            uint8 certaintyThreshold,
+            uint16 allowedStaleness
+        )
+    {
+        OracleBufferInfo memory bufferInfo = rateFeeds[rateFeedId].bufferInfo;
         return (
             bufferInfo.windowSize,
             bufferInfo.allowedDeviation,

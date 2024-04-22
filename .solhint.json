@@ -1,6 +1,5 @@
 {
   "extends": "solhint:recommended",
-  "plugins": ["prettier"],
   "rules": {
     "code-complexity": ["error", 7],
     "compiler-version": ["error", ">=0.8.24"],
@@ -23,8 +22,7 @@
     "ordering": "error",
     "named-parameters-mapping": "error",
     "modifier-name-mixedcase": "error",
-    "prettier/prettier": [ "error" ],
-    "private-vars-leading-underscore": ["error", {"strict":false}],
+    "private-vars-leading-underscore": ["error", { "strict": false }],
     "reason-string": ["error", { "maxLength": 64 }]
   }
 }

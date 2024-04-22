@@ -10,23 +10,21 @@ contract OraclesTest is Test {
 
     address aRateFeed;
     // solhint-disable-next-line no-empty-blocks
-    function setUp() virtual public {
+    function setUp() public virtual {
         oracles = new Oracles();
         aRateFeed = address(0x1337);
     }
 }
 
-contract Oracles_report is OraclesTest {
-}
+contract Oracles_report is OraclesTest {}
 
-contract Oracles_markStale is OraclesTest {
-}
+contract Oracles_markStale is OraclesTest {}
 
 contract Oracles_setWindowSize is OraclesTest {
     function testFuzz_setsWindowSize(uint8 windowSize) public {
         vm.assume(windowSize != 0 && windowSize <= 100);
         oracles.setWindowSize(aRateFeed, windowSize);
-        (uint8 realWindowSize,,,,) = oracles.rateFeedParameters(aRateFeed);
+        (uint8 realWindowSize, , , , ) = oracles.rateFeedParameters(aRateFeed);
         assertEq(realWindowSize, windowSize);
     }
 
@@ -62,7 +60,9 @@ contract Oracles_setWindowSize is OraclesTest {
 contract Oracles_setAllowedDeviation is OraclesTest {
     function testFuzz_setsAllowedDeviation(uint16 allowedDeviation) public {
         oracles.setAllowedDeviation(aRateFeed, allowedDeviation);
-        (, uint16 realAllowedDeviation,,,) = oracles.rateFeedParameters(aRateFeed);
+        (, uint16 realAllowedDeviation, , , ) = oracles.rateFeedParameters(
+            aRateFeed
+        );
         assertEq(realAllowedDeviation, allowedDeviation);
     }
 
@@ -78,7 +78,7 @@ contract Oracles_setAllowedDeviation is OraclesTest {
 contract Oracles_setQuorum is OraclesTest {
     function testFuzz_setsQuorum(uint8 quorum) public {
         oracles.setQuorum(aRateFeed, quorum);
-        (,, uint8 realQuorum,,) = oracles.rateFeedParameters(aRateFeed);
+        (, , uint8 realQuorum, , ) = oracles.rateFeedParameters(aRateFeed);
         assertEq(realQuorum, quorum);
     }
 
@@ -95,7 +95,9 @@ contract Oracles_setQuorum is OraclesTest {
 contract Oracles_setCertaintyThreshold is OraclesTest {
     function testFuzz_setsCertaintyThreshold(uint8 certaintyThreshold) public {
         oracles.setCertaintyThreshold(aRateFeed, certaintyThreshold);
-        (,,, uint8 realCertaintyThreshold,) = oracles.rateFeedParameters(aRateFeed);
+        (, , , uint8 realCertaintyThreshold, ) = oracles.rateFeedParameters(
+            aRateFeed
+        );
         assertEq(realCertaintyThreshold, certaintyThreshold);
     }
 
@@ -114,7 +116,9 @@ contract Oracles_setCertaintyThreshold is OraclesTest {
 contract Oracles_setAllowedStaleness is OraclesTest {
     function testFuzz_setsAllowedStaleness(uint16 allowedStaleness) public {
         oracles.setAllowedStaleness(aRateFeed, allowedStaleness);
-        (,,,, uint16 realAllowedStaleness) = oracles.rateFeedParameters(aRateFeed);
+        (, , , , uint16 realAllowedStaleness) = oracles.rateFeedParameters(
+            aRateFeed
+        );
         assertEq(realAllowedStaleness, allowedStaleness);
     }
 
@@ -137,15 +141,7 @@ contract Oracles_addRateFeed is OraclesTest {
         address anotherRateFeed = address(0xbeef);
         address[] memory dataProviders = new address[](1);
         dataProviders[0] = address(0xcafe);
-        oracles.addRateFeed(
-            anotherRateFeed,
-            2,
-            100,
-            5,
-            3,
-            120,
-            dataProviders
-        );
+        oracles.addRateFeed(anotherRateFeed, 2, 100, 5, 3, 120, dataProviders);
 
         (
             uint8 realWindowSize,
@@ -173,19 +169,11 @@ contract Oracles_removeRateFeed is OraclesTest {
     address anotherRateFeed = address(0xbeef);
     address aDataProvider = address(0xcafe);
 
-    function setUp() override public {
+    function setUp() public override {
         super.setUp();
         address[] memory dataProviders = new address[](1);
         dataProviders[0] = address(0xcafe);
-        oracles.addRateFeed(
-            anotherRateFeed,
-            2,
-            100,
-            5,
-            3,
-            120,
-            dataProviders
-        );
+        oracles.addRateFeed(anotherRateFeed, 2, 100, 5, 3, 120, dataProviders);
 
         (
             uint8 realWindowSize,
@@ -199,7 +187,9 @@ contract Oracles_removeRateFeed is OraclesTest {
     function test_removesTheRateFeed() public {
         oracles.removeRateFeed(anotherRateFeed);
 
-        (uint8 realWindowSize,,,,) = oracles.rateFeedParameters(anotherRateFeed);
+        (uint8 realWindowSize, , , , ) = oracles.rateFeedParameters(
+            anotherRateFeed
+        );
         assertEq(realWindowSize, 0);
     }
 
@@ -210,7 +200,6 @@ contract Oracles_removeRateFeed is OraclesTest {
 }
 
 contract Oracles_addDataProvider is OraclesTest {
-
     /*
     TODO:
     - Only owner
@@ -218,7 +207,6 @@ contract Oracles_addDataProvider is OraclesTest {
 }
 
 contract Oracles_removeDataProvider is OraclesTest {
-
     /*
     TODO:
     - Only owner

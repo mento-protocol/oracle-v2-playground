@@ -1,3 +1,6 @@
 export default {
-  "*.sol": "solhint -w 0",
-}
+  "*.md": ["prettier --write"],
+  "*.sol": ["prettier --write", "solhint -w 0"],
+  "*.json": ["prettier --write"],
+  "*.yml": ["prettier --write"],
+};
