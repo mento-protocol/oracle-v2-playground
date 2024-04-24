@@ -43,6 +43,10 @@ library RedStonePayload {
     // Byte size of data feed id
     uint256 constant DATA_FEED_ID_BS = 32;
 
+    // RedStone allows a single oracle to report for multiple feeds in a single
+    // batch, but our model assumes each batch is for a single data feed.
+    uint256 constant DATA_POINTS_PER_PACKAGE = 1;
+
     struct DataPoint {
         bytes dataFeedId;
         uint256 value;
@@ -112,5 +116,24 @@ library RedStonePayload {
     }
 
     function serializePayload(Payload memory payload) internal pure returns (bytes memory) {
+        uint256 numberDataPackages = payload.dataPackages.length;
+        uint256 serializedPayloadLength =
+            REDSTONE_MARKER_BS +
+            UNSIGNED_METADATA_BYTE_SIZE_BS + // + 0 for actual metadata in our case
+            DATA_PACKAGES_COUNT_BS +
+            numberDataPackages * (
+                SIGNATURE_BS +
+                DATA_POINTS_COUNT_BS +
+                DATA_POINT_VALUE_BYTE_SIZE_BS +
+                TIMESTAMP_BS +
+                DATA_POINTS_PER_PACKAGE * ( // this is always = 1 in our case
+                    DATA_FEED_ID_BS +
+                    DEFAULT_NUM_VALUE_BS
+                )
+            );
+
+        bytes memory serializedPayload = new bytes(serializedPayloadLength);
+
+        return serializedPayload;
     }
 }

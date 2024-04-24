@@ -38,4 +38,32 @@ contract OraclesTest is Test {
             1337
         );
     }
+
+    function test_serializePayload() public {
+        bytes memory dataFeedId = new bytes(20);
+        dataFeedId = "USDCELO";
+        uint256[] memory values = new uint256[](1);
+        bytes32[] memory rs = new bytes32[](1);
+        bytes32[] memory ss = new bytes32[](1);
+        uint8[] memory vs = new uint8[](1);
+        uint256[] memory timestamps = new uint256[](1);
+
+        values[0] = 42;
+        rs[0] = 0;
+        ss[0] = 0;
+        vs[0] = 0;
+        timestamps[0] = 1337;
+
+        RedStonePayload.Payload memory payload = RedStonePayload.makePayload(
+            dataFeedId,
+            values,
+            rs,
+            ss,
+            vs,
+            timestamps
+        );
+
+        bytes memory result = RedStonePayload.serializePayload(payload);
+        assertEq(result.length, 156);
+    }
 }
