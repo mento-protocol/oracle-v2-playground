@@ -16,11 +16,11 @@
     "gas-named-return-values": "error",
     "gas-small-strings": "error",
     "gas-strict-inequalities": "error",
-    "gas-struct-packing": "error",
+    "gas-struct-packing": "warn",
     "interface-starts-with-i": "error",
     "max-line-length": ["error", 120],
     "ordering": "error",
-    "named-parameters-mapping": "error",
+    "named-parameters-mapping": "warn",
     "modifier-name-mixedcase": "error",
     "private-vars-leading-underscore": ["error", { "strict": false }],
     "reason-string": ["error", { "maxLength": 64 }]

@@ -6,7 +6,7 @@
   "scripts": {
     "format": "prettier --write \"**/*.{js,mjs,json,md,sol,yml}\" --list-different",
     "format:check": "prettier --check \"**/*.{js,mjs,json,md,sol,yml}\"",
-    "lint": "solhint \"{src,test,script}/**/*.sol\" -w 0",
+    "lint": "solhint \"{src,script}/**/*.sol\" -w 0 && solhint \"test/**/*.sol\" -c .solhint.test.json -w 0",
     "build": "forge build",
     "test": "forge test",
     "prepare": "husky"

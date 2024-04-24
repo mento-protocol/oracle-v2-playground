@@ -8,6 +8,7 @@ pragma solidity ^0.8.24;
  */
 library RedStonePayload {
     // Constants from
+    // solhint-disable-next-line max-line-length
     // https://github.com/redstone-finance/redstone-oracles-monorepo/blob/main/packages/protocol/src/common/redstone-constants.ts
     // Number of bytes reserved to store timestamp
     uint256 constant TIMESTAMP_BS = 6;

@@ -26,7 +26,8 @@ contract Oracles is IOracles {
         uint16 allowedStaleness;
     }
 
-    mapping(address => OracleBuffer) rateFeeds;
+    mapping(address => OracleBuffer) public rateFeeds;
+
     function report(address rateFeedId) external {}
 
     function markStale(address rateFeedId) external {}
