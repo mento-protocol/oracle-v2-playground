@@ -9,8 +9,7 @@ contract OraclesTest is Test {
     function setUp() public virtual {}
 
     function test_makePayload() public {
-        bytes memory dataFeedId = new bytes(20);
-        dataFeedId = "USDCELO";
+        bytes32 dataFeedId = "USDCELO";
         uint256[] memory values = new uint256[](1);
         bytes32[] memory rs = new bytes32[](1);
         bytes32[] memory ss = new bytes32[](1);
@@ -40,8 +39,7 @@ contract OraclesTest is Test {
     }
 
     function test_serializePayload() public {
-        bytes memory dataFeedId = new bytes(20);
-        dataFeedId = "USDCELO";
+        bytes32 dataFeedId = "USDCELO";
         uint256[] memory values = new uint256[](1);
         bytes32[] memory rs = new bytes32[](1);
         bytes32[] memory ss = new bytes32[](1);
