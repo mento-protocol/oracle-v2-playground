@@ -4,6 +4,8 @@ pragma solidity ^0.8.24;
 import {IOracles} from "./interfaces/IOracles.sol";
 import {OracleValue, OracleValueLib} from "./lib/OracleValueLib.sol";
 
+// TODO: reanable some/all of these once code written
+// solhint-disable no-empty-blocks, gas-struct-packing, named-parameters-mapping
 contract Oracles is IOracles {
     using OracleValueLib for OracleValue;
 
