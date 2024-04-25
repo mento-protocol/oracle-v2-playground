@@ -5,9 +5,9 @@ pragma solidity ^0.8.24;
 import {Test} from "forge-std/Test.sol";
 import {RedStonePayload} from "./lib/RedStonePayload.sol";
 
-contract RedStonePayloadTest is Test {
-    function setUp() public virtual {}
+contract RedStonePayloadTest is Test {}
 
+contract RedStonePayloadTest_makePayload is RedStonePayloadTest {
     function test_makePayload() public {
         bytes32 dataFeedId = "USDCELO";
         uint256[] memory values = new uint256[](1);
@@ -37,7 +37,9 @@ contract RedStonePayloadTest is Test {
             1337
         );
     }
+}
 
+contract RedStonePayload_serializePayload is RedStonePayloadTest {
     function test_serializePayload() public {
         bytes32 dataFeedId = "USDCELO";
         uint256[] memory values = new uint256[](1);
@@ -62,6 +64,7 @@ contract RedStonePayloadTest is Test {
         );
 
         bytes memory result = RedStonePayload.serializePayload(payload);
+        // 156 comes from manual math verification of what the length should be.
         assertEq(result.length, 156);
     }
 }
