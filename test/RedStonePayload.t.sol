@@ -5,7 +5,7 @@ pragma solidity ^0.8.24;
 import {Test} from "forge-std/Test.sol";
 import {RedStonePayload} from "./lib/RedStonePayload.sol";
 
-contract OraclesTest is Test {
+contract RedStonePayloadTest is Test {
     function setUp() public virtual {}
 
     function test_makePayload() public {
