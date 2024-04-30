@@ -8,6 +8,7 @@ import {OracleValueLib, OracleValue} from "./lib/OracleValueLib.sol";
 // solhint-disable-next-line max-line-length
 // Alex's original Oracles PoC: https://github.com/redstone-finance/redstone-evm-examples/blob/mento-v2-oracles-poc/contracts/mento-v2-oracles/MentoV2Oracles.sol
 
+// solhint-disable gas-struct-packing
 contract OraclesV2 is RedstoneConsumerNumericBase {
     using OracleValueLib for OracleValue;
 
