@@ -104,7 +104,7 @@ contract Oracles is IOracles, RedstoneConsumerNumericBase {
     error MinAndMaxValuesDeviateTooMuch(uint256 minVal, uint256 maxVal);
 
     // TODO: This is a placeholder for the actual implementation base on the 2023 PoC
-    // solhint-disable-next-line max-line-lenght
+    // solhint-disable-next-line max-line-length
     // https://github.com/redstone-finance/redstone-evm-examples/blob/mento-v2-oracles-poc/contracts/mento-v2-oracles/MentoV2Oracles.sol
     function report(address rateFeedId) external {
         _currentlyUpdatedRateFeedId = rateFeedId;

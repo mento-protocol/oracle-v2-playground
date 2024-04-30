@@ -12,47 +12,6 @@ library RedStonePayload {
         uint256 currentIndex;
     }
 
-    // Constants from
-    // solhint-disable-next-line max-line-length
-    // https://github.com/redstone-finance/redstone-oracles-monorepo/blob/main/packages/protocol/src/common/redstone-constants.ts
-    // Number of bytes reserved to store timestamp
-    uint256 constant TIMESTAMP_BS = 6;
-
-    // Number of bytes reserved to store the number of data points
-    uint256 constant DATA_POINTS_COUNT_BS = 3;
-
-    // Number of bytes reserved to store datapoints byte size
-    uint256 constant DATA_POINT_VALUE_BYTE_SIZE_BS = 4;
-
-    // Default value byte size for numeric values
-    uint256 constant DEFAULT_NUM_VALUE_BS = 32;
-
-    // Default precision for numeric values
-    uint256 constant DEFAULT_NUM_VALUE_DECIMALS = 8;
-
-    // Number of bytes reserved for data packages count
-    uint256 constant DATA_PACKAGES_COUNT_BS = 2;
-
-    // Number of bytes reserved for unsigned metadata byte size
-    uint256 constant UNSIGNED_METADATA_BYTE_SIZE_BS = 3;
-
-    // RedStone marker, which will be appended in the end of each transaction
-    uint256 constant REDSTONE_MARKER = 0x000002ed57011e0000;
-
-    // Byte size of RedStone marker
-    // we subtract 1 because of the 0x prefix
-    uint256 constant REDSTONE_MARKER_BS = 9;
-
-    // Byte size of signatures
-    uint256 constant SIGNATURE_BS = 65;
-
-    // Byte size of data feed id
-    uint256 constant DATA_FEED_ID_BS = 32;
-
-    // RedStone allows a single oracle to report for multiple feeds in a single
-    // batch, but our model assumes each batch is for a single data feed.
-    uint256 constant DATA_POINTS_PER_PACKAGE = 1;
-
     struct DataPoint {
         bytes32 dataFeedId;
         uint256 value;
@@ -83,6 +42,47 @@ library RedStonePayload {
         SignedDataPackage[] dataPackages;
         string metadata;
     }
+
+    // Constants from
+    // solhint-disable-next-line max-line-length
+    // https://github.com/redstone-finance/redstone-oracles-monorepo/blob/main/packages/protocol/src/common/redstone-constants.ts
+    // Number of bytes reserved to store timestamp
+    uint256 private constant TIMESTAMP_BS = 6;
+
+    // Number of bytes reserved to store the number of data points
+    uint256 private constant DATA_POINTS_COUNT_BS = 3;
+
+    // Number of bytes reserved to store datapoints byte size
+    uint256 private constant DATA_POINT_VALUE_BYTE_SIZE_BS = 4;
+
+    // Default value byte size for numeric values
+    uint256 private constant DEFAULT_NUM_VALUE_BS = 32;
+
+    // Default precision for numeric values
+    uint256 private constant DEFAULT_NUM_VALUE_DECIMALS = 8;
+
+    // Number of bytes reserved for data packages count
+    uint256 private constant DATA_PACKAGES_COUNT_BS = 2;
+
+    // Number of bytes reserved for unsigned metadata byte size
+    uint256 private constant UNSIGNED_METADATA_BYTE_SIZE_BS = 3;
+
+    // RedStone marker, which will be appended in the end of each transaction
+    uint256 private constant REDSTONE_MARKER = 0x000002ed57011e0000;
+
+    // Byte size of RedStone marker
+    // we subtract 1 because of the 0x prefix
+    uint256 private constant REDSTONE_MARKER_BS = 9;
+
+    // Byte size of signatures
+    uint256 private constant SIGNATURE_BS = 65;
+
+    // Byte size of data feed id
+    uint256 private constant DATA_FEED_ID_BS = 32;
+
+    // RedStone allows a single oracle to report for multiple feeds in a single
+    // batch, but our model assumes each batch is for a single data feed.
+    uint256 private constant DATA_POINTS_PER_PACKAGE = 1;
 
     function makePayload(
         bytes32 dataFeedId,
@@ -220,7 +220,7 @@ library RedStonePayload {
         Payload memory payload
     ) internal pure returns (bytes memory) {
         uint256 numberDataPackages = payload.dataPackages.length;
-        // solhint-disable prettier/prettier
+        // prettier-ignore
         uint256 serializedPayloadLength = REDSTONE_MARKER_BS +
             UNSIGNED_METADATA_BYTE_SIZE_BS + // + 0 for actual metadata in our case
             DATA_PACKAGES_COUNT_BS +
@@ -234,7 +234,6 @@ library RedStonePayload {
                     DEFAULT_NUM_VALUE_BS
                 )
             );
-        // solhint-enable prettier/prettier
 
         SerializationBuffer memory buffer = newSerializationBuffer(
             serializedPayloadLength

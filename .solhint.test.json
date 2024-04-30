@@ -1,6 +1,5 @@
 {
   "extends": "solhint:recommended",
-  "plugins": ["prettier"],
   "rules": {
     "one-contract-per-file": "off",
     "no-unused-vars": "off",
@@ -17,12 +16,6 @@
     "const-name-snakecase": "off",
     "contract-name-camelcase": "off",
     "no-empty-blocks": "off",
-    "prettier/prettier": [
-      "error",
-      {
-        "endOfLine": "auto"
-      }
-    ],
     "reason-string": ["warn", { "maxLength": 64 }]
   }
 }

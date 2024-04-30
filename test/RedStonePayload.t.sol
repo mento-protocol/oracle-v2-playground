@@ -8,7 +8,7 @@ import {RedStonePayload} from "./lib/RedStonePayload.sol";
 contract RedStonePayloadTest is Test {}
 
 contract RedStonePayloadTest_makePayload is RedStonePayloadTest {
-    function test_makePayload() public {
+    function test_makePayload() public pure {
         bytes32 dataFeedId = "USDCELO";
         uint256[] memory values = new uint256[](1);
         bytes32[] memory rs = new bytes32[](1);
@@ -40,7 +40,7 @@ contract RedStonePayloadTest_makePayload is RedStonePayloadTest {
 }
 
 contract RedStonePayload_serializePayload is RedStonePayloadTest {
-    function test_serializePayload() public {
+    function test_serializePayload() public pure {
         bytes32 dataFeedId = "USDCELO";
         uint256[] memory values = new uint256[](1);
         bytes32[] memory rs = new bytes32[](1);
