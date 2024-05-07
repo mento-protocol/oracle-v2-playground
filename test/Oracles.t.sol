@@ -188,13 +188,6 @@ contract Oracles_removeRateFeed is OraclesTest {
             allowedStalenessInSeconds: 120,
             dataProviders: dataProviders
         });
-        (
-            uint8 realWindowSize,
-            uint16 realAllowedDeviation,
-            uint8 realQuorum,
-            uint8 realCertaintyThreshold,
-            uint16 realAllowedStaleness
-        ) = oracles.rateFeedConfig(_anotherRateFeed);
     }
 
     function test_removesTheRateFeed() public {
