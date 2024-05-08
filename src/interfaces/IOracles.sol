@@ -15,7 +15,7 @@ pragma solidity ^0.8.24;
  *
  * KEY CONCEPTS
  * @dev Rate Feed     = A specific price feed, e.g. "CELO/USD".
- * @dev Rate Feed ID  = A unique rate feed identifier calculated as address(uint160(uint256(keccak256("CELOUSD")))).
+ * @dev Rate Feed ID  = A unique rate feed identifier calculated as e.g. address(uint160(uint256(keccak256("CELOUSD")))).
  *
  * @dev Price Value   = A single price point from a data provider for a single rate feed.
  * @dev Price Report  = A batch of multiple price values from different data providers for a single rate feed.
@@ -33,7 +33,7 @@ pragma solidity ^0.8.24;
  */
 interface IOracles {
     /**
-     * @notice Main input function through which relayers submit new batched price reports on-chain
+     * @notice Main input function through which relayers submit new batched price reports on-chain.
      * @param rateFeedId The rate feed for which prices are being submitted.
      * @dev This function expects additional calldata in form of a RedStone data package payload,
      *      which includes signed and timestamped price points from oracle node operators. The
@@ -106,7 +106,7 @@ interface IOracles {
 
     /**
      * @notice Removes a data provider from being allowed to report for a rate feed.
-     * @param rateFeedId The rate feed from which the data provider should be removed
+     * @param rateFeedId The rate feed from which the data provider should be removed.
      * @param provider   The data provider's address.
      * @dev Only callable by the owner.
      */
@@ -194,7 +194,7 @@ interface IOracles {
      * - Bit 0 (least significant): `isFresh`
      * - Bit 1: `isCertain`
      * - Bit 2: `isWithinAllowedDeviation`
-     * - Bits 3-7: unused
+     * - Bits 3-7: unused.
      */
     function rateFeedInfo(
         address rateFeedId
@@ -204,7 +204,7 @@ interface IOracles {
      * @notice Returns the current configuration parameters for a rate feed.
      * @param rateFeedId The rate feed being queried.
      * @return priceWindowSize           The number of most recent median prices to average over for the final reported price.
-     * @return allowedDeviation          The maximum allowed deviation between the lowest and highest price values in a price report
+     * @return allowedDeviation          The maximum allowed deviation between the lowest and highest price values in a price report.
      * @return quorum                    The minimum number of values per report.
      * @return certaintyThreshold        The minimum number of certain values per report.
      * @return allowedStalenessInSeconds The allowed staleness in seconds.
@@ -230,10 +230,10 @@ interface IOracles {
     /********************************************************/
 
     /**
-     * @notice Passthrough function that calls the new main interface `getExchangeRateFor()`
-     * @dev We're ignoring the `lastUpdateTimestamp` as this wasn't part of the old SortedOracles interface
-     * @param rateFeedId   The rate feed to fetch the latest price for
-     * @return numerator   The numerator of the price
+     * @notice Passthrough function that calls the new main interface `getExchangeRateFor()`.
+     * @dev We're ignoring the `lastUpdateTimestamp` as this wasn't part of the old SortedOracles interface.
+     * @param rateFeedId   The rate feed to fetch the latest price for.
+     * @return numerator   The numerator of the price.
      * @return denominator The denominator of the price, fixed at 1e24.
      */
     function medianRate(
@@ -242,7 +242,7 @@ interface IOracles {
 
     /**
      * @notice Returns the timestamp of the latest price report.
-     * @dev Uses the new interface's `latestTimestamp` cast to uint256
+     * @dev Uses the new interface's `latestTimestamp` cast to uint256.
      * @param rateFeedId The rate feed being queried.
      * @return timestamp The timestamp of the latest price report for the specified rateFeedId.
      */

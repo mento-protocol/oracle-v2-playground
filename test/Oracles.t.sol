@@ -19,7 +19,8 @@ contract OraclesTest is Test {
 }
 
 // solhint-disable-next-line max-line-length
-// Example for a Redstone calldata payload // https://github.com/redstone-finance/redstone-near-connectors/blob/7bc02fc5421200b15da56c33c5c6130130b3ff8a/js/test/integration.test.ts#L17-L37
+// Example for a Redstone calldata payload:
+// https://github.com/redstone-finance/redstone-near-connectors/blob/7bc02fc5421200b15da56c33c5c6130130b3ff8a/js/test/integration.test.ts#L17-L37
 contract Oracles_report is OraclesTest {}
 
 contract Oracles_markStale is OraclesTest {}

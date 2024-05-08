@@ -14,7 +14,7 @@ contract Oracles is IOracles, RedstoneConsumerNumericBase {
     // prettier-ignore
     struct RateFeed {
         /// @dev A cyclic buffer of the 100 most recent price reports.
-        /// @dev A price is an unwrapped OracleValue converted to uint256
+        /// @dev A price is an unwrapped OracleValue converted to uint256.
         uint256[100] latestPrices;
 
         /// @dev Tightly packed rate feed details fitting into a single storage slot.
@@ -22,25 +22,25 @@ contract Oracles is IOracles, RedstoneConsumerNumericBase {
     }
 
     // prettier-ignore
-    // Designed to fit within 1 storage slot
+    // Designed to fit within 1 storage slot.
     struct RateFeedDetails {
         /**********************/
         /*  Rate Feed Config  */
         /**********************/
 
-        /// @dev number of the most recent price values to average over.
+        /// @dev Number of the most recent price values to average over.
         uint8 priceWindowSize;
 
-        /// @dev the maximal allowed deviation between reported prices within a batch, expressed as a factor < 1.
+        /// @dev The maximal allowed deviation between reported prices within a batch, expressed as a factor < 1.
         uint16 allowedDeviation;
 
-        /// @dev the minimal number of data providers that need to have reported a value in the last report
+        /// @dev The minimal number of data providers that need to have reported a value in the last report.
         uint8 quorum;
 
-        /// @dev the minimal number of data providers that need to be certain of their value.
+        /// @dev The minimal number of data providers that need to be certain of their value.
         uint8 certaintyThreshold;
 
-        /// @dev the allowed age of a report before it is considered stale, in seconds.
+        /// @dev The allowed age of a report before it is considered stale, in seconds.
         uint16 allowedStaleness;
 
 
@@ -48,36 +48,36 @@ contract Oracles is IOracles, RedstoneConsumerNumericBase {
         /*  Rate Feed Values  */
         /**********************/
 
-        /// @dev index of the most recently reported price.
+        /// @dev Index of the most recently reported price.
         uint8 latestPriceIndex;
 
-        /// @dev true if the buffer of the 100 most recent prices has been filled up at least once.
+        /// @dev True if the buffer of the 100 most recent prices has been filled up at least once.
         bool bufferFull;
 
-        /// @dev sum of the last `priceWindowSize` prices.
+        /// @dev Sum of the last `priceWindowSize` prices.
         OracleValue priceWindowSum;
 
-        /// @dev average of the last `priceWindowSize` prices (i.e. `priceWindowSum / priceWindowSize`).
+        /// @dev Average of the last `priceWindowSize` prices (i.e. `priceWindowSum / priceWindowSize`).
         OracleValue priceWindowAverage;
 
-        /// @dev timestamp of the latest price report.
+        /// @dev Timestamp of the latest price report.
         uint40 latestTimestamp;
 
-        /// @dev a bitmask of the following validity flags:
+        /// @dev A bitmask of the following validity flags:
         /// 0x001 - isFresh => the last price report is fresh
         /// 0x010 - isCertain => at least `certaintyThreshold` data providers are certain of their price report
-        /// 0x100 - isWithinAllowedDeviation => the latest price is within the allowed deviation
+        /// 0x100 - isWithinAllowedDeviation => the latest price is within the allowed deviation.
         uint8 validityFlags;
     }
 
-    /// @dev Set of supported rate feed IDs
+    /// @dev Set of supported rate feed IDs.
     EnumerableSet.AddressSet private _rateFeedIds;
 
-    /// @dev mapping from rateFeedId to a set of data provider addresses allowed to report prices for `rateFeedId`
+    /// @dev mapping from rateFeedId to a set of data provider addresses allowed to report prices for `rateFeedId`.
     mapping(address rateFeedId => EnumerableSet.AddressSet dataProviders)
         private _rateFeedProviders;
 
-    /// @dev mapping from rateFeedId to a rateFeed containing price reports and metadata
+    /// @dev Mapping from rateFeedId to a rateFeed containing price medians and metadata.
     mapping(address rateFeedId => RateFeed rateFeed) private _rateFeeds;
 
     address internal _currentlyUpdatedRateFeedId;
@@ -103,7 +103,7 @@ contract Oracles is IOracles, RedstoneConsumerNumericBase {
     );
     error MinAndMaxValuesDeviateTooMuch(uint256 minVal, uint256 maxVal);
 
-    // TODO: This is a placeholder for the actual implementation base on the 2023 PoC
+    // TODO: This is a placeholder for the actual implementation based on the 2023 PoC.
     // solhint-disable-next-line max-line-length
     // https://github.com/redstone-finance/redstone-evm-examples/blob/mento-v2-oracles-poc/contracts/mento-v2-oracles/MentoV2Oracles.sol
     function report(address rateFeedId) external {
@@ -304,7 +304,7 @@ contract Oracles is IOracles, RedstoneConsumerNumericBase {
         return NumericArrayLib.pickMedian(values);
     }
 
-    /// @notice Check each provider is a member of _rateFeedProviders[rateFeedId], revert if not
+    /// @notice Check each provider is a member of _rateFeedProviders[rateFeedId], revert if not.
     function getAuthorisedSignerIndex(
         address signerAddress
     ) public view virtual override returns (uint8 signerIndex) {
