@@ -106,6 +106,24 @@ library RedStonePayload {
         return Signature(r, s, v);
     }
 
+    function makeDataPackage(
+        bytes32 dataFeedId,
+        uint256 value,
+        uint256 timestamp
+    ) internal pure returns (DataPackage memory) {
+        DataPoint[] memory dataPoints = new DataPoint[](1);
+        dataPoints[0] = DataPoint(
+            dataFeedId,
+            value,
+            DEFAULT_NUM_VALUE_DECIMALS,
+            DEFAULT_NUM_VALUE_BS
+        );
+        return DataPackage(
+            dataPoints,
+            timestamp
+        );
+    }
+
     function makePayload(
         bytes32 dataFeedId,
         uint256[] memory values,
@@ -119,13 +137,11 @@ library RedStonePayload {
         payload.dataPackages = new SignedDataPackage[](numberPackages);
 
         for (uint256 i = 0; i < numberPackages; i++) {
-            DataPoint[] memory dataPoints = new DataPoint[](1);
-            dataPoints[0] = DataPoint(dataFeedId, values[i], 18, 8);
-            DataPackage memory dataPackage = DataPackage(
-                dataPoints,
+            DataPackage memory dataPackage = makeDataPackage(
+                dataFeedId,
+                values[i],
                 timestamps[i]
             );
-
             Signature memory signature = signDataPackage(dataPackage, privateKeys[i]);
             payload.dataPackages[i] = SignedDataPackage(dataPackage, signature);
         }
@@ -148,10 +164,9 @@ library RedStonePayload {
         payload.dataPackages = new SignedDataPackage[](numberPackages);
 
         for (uint256 i = 0; i < numberPackages; i++) {
-            DataPoint[] memory dataPoints = new DataPoint[](1);
-            dataPoints[0] = DataPoint(dataFeedId, values[i], 18, 8);
-            DataPackage memory dataPackage = DataPackage(
-                dataPoints,
+            DataPackage memory dataPackage = makeDataPackage(
+                dataFeedId,
+                values[i],
                 timestamps[i]
             );
             Signature memory signature = Signature(rs[i], ss[i], vs[i]);
