@@ -3,9 +3,13 @@
 pragma solidity ^0.8.24;
 
 import {Test} from "forge-std/Test.sol";
+
+import {DebugRedStoneConsumer} from "./lib/DebugRedStoneConsumer.sol";
 import {RedStonePayload} from "./lib/RedStonePayload.sol";
 
 contract RedStonePayloadTest is Test {
+    DebugRedStoneConsumer consumer;
+
     uint256 constant PRIVATE_KEY_1 =
         0x1111111111111111111111111111111111111111111111111111111111111111;
     address constant ADDRESS_1 = 0x19E7E376E7C213B7E7e7e46cc70A5dD086DAff2A;
@@ -49,12 +53,11 @@ contract RedStonePayloadTest is Test {
         uint256[] memory timestamps = new uint256[](2);
 
         values[0] = 42;
-        values[0] = 24;
+        values[1] = 24;
         privateKeys[0] = PRIVATE_KEY_1;
         privateKeys[1] = PRIVATE_KEY_2;
         timestamps[0] = 1337;
         timestamps[1] = 1337;
-
         return
             RedStonePayload.makePayload(
                 dataFeedId,
@@ -62,6 +65,29 @@ contract RedStonePayloadTest is Test {
                 privateKeys,
                 timestamps
             );
+    }
+
+    function setUp() public {
+        consumer = new DebugRedStoneConsumer();
+    }
+
+    function reportWithPayload(
+        bytes32 rateFeedId,
+        bytes memory payload,
+        uint8 signers
+    ) public returns (uint64[4] memory) {
+        bytes memory callData = abi.encodeWithSignature(
+            "report(bytes32)",
+            rateFeedId
+        );
+        bytes memory callDataWithPayload = bytes.concat(callData, payload);
+        consumer.setUniqueSignersThreshold(signers);
+        // solhint-disable-next-line avoid-low-level-calls
+        (, bytes memory returnBytes) = address(consumer).call(
+            callDataWithPayload
+        );
+        uint256 returnValue = abi.decode(returnBytes, (uint256));
+        return consumer.parseAggregatedValue(returnValue);
     }
 }
 
@@ -150,5 +176,26 @@ contract RedStonePayload_serializePayload is RedStonePayloadTest {
         bytes memory result = RedStonePayload.serializePayload(payload);
         // 298 comes from manual math verification of what the length should be.
         assertEq(result.length, 298);
+    }
+
+    function test_parseSerializedPayload() public {
+        RedStonePayload.Payload memory payload = payloadWithOneDataPackage();
+        bytes memory result = RedStonePayload.serializePayload(payload);
+
+        uint64[4] memory values = reportWithPayload("USDCELO", result, 1);
+
+        assertEq(values[0], 42);
+        assertEq(consumer.receivedTimestamp(), 1337);
+    }
+
+    function test_parseSerializedPayloadWithTwoValues() public {
+        RedStonePayload.Payload memory payload = payloadWithTwoDataPackages();
+        bytes memory result = RedStonePayload.serializePayload(payload);
+
+        uint64[4] memory values = reportWithPayload("USDCELO", result, 2);
+
+        assertEq(values[0], 42);
+        assertEq(values[1], 24);
+        assertEq(consumer.receivedTimestamp(), 1337);
     }
 }
