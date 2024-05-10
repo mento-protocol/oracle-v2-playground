@@ -90,7 +90,10 @@ library RedStonePayload {
     // batch, but our model assumes each batch is for a single data feed.
     uint256 private constant DATA_POINTS_PER_PACKAGE = 1;
 
-    function signDataPackage(DataPackage memory dataPackage, uint256 privateKey) internal pure returns (Signature memory) {
+    function signDataPackage(
+        DataPackage memory dataPackage,
+        uint256 privateKey
+    ) internal pure returns (Signature memory) {
        uint256 dataPackageSerializedSize =
             DATA_POINTS_COUNT_BS +
             DATA_POINT_VALUE_BYTE_SIZE_BS +
