@@ -82,12 +82,6 @@ contract Oracles is IOracles, RedstoneConsumerNumericBase {
 
     address internal _currentlyUpdatedRateFeedId;
 
-    /**************************************/
-    /*                                    */
-    /*  RedStone Base Contract Overrides  */
-    /*                                    */
-    /**************************************/
-
     error InvalidProviderForRateFeed(address rateFeedId, address provider);
     error TimestampFromFutureIsNotAllowed(
         uint256 receivedTimestampMilliseconds,
