@@ -72,7 +72,7 @@ interface IOracles {
      * @notice Adds a new supported rate feed.
      * @param rateFeedId                The new rate feed's ID, calculated as, i.e.: `address(uint160(uint256(keccak256("CELOUSD"))))`
      * @param priceWindowSize           The number of most recent median prices to average over for the final reported price.
-     * @param allowedDeviation          The maximum allowed deviation between the lowest and highest price values in a price report
+     * @param allowedDeviationNumerator The maximum allowed deviation between the lowest and highest price values in a price report
      * @param quorum                    The minimum number of values per report.
      * @param certaintyThreshold        The minimum number of certain values per report.
      * @param allowedStalenessInSeconds The allowed staleness in seconds.
@@ -82,7 +82,7 @@ interface IOracles {
     function addRateFeed(
         address rateFeedId,
         uint8 priceWindowSize,
-        uint16 allowedDeviation,
+        uint16 allowedDeviationNumerator,
         uint8 quorum,
         uint8 certaintyThreshold,
         uint16 allowedStalenessInSeconds,
@@ -134,14 +134,16 @@ interface IOracles {
     /**
      * @notice Sets the allowed price deviation between the lowest and highest price values in a report for a rate feed.
      * @param rateFeedId The rate feed being configured.
-     * @param allowedDeviation The difference between the lowest and highest value in a price report.
-     *        Expressed as the numerator of a fraction over uint16.max (65535). I.e., if allowedDeviation was 10_000,
-     *        then the difference between price values can't be greater than 1_000 / 65_535 = 0.015259... ≈ 1.526%
+     * @param allowedDeviationNumerator Defines the allowed difference between the lowest and highest value in a price
+     *        report.
+     *        Expressed as the numerator of a fraction over uint16.max (65535). I.e., if allowedDeviationNumerator was
+     *        1_000, then the largest value in a batch can't be greater than the smallest value by more
+     *        than 1_000 / 65_535 = 0.015259... ≈ 1.526%.
      * @dev Only callable by the owner.
      */
-    function setAllowedDeviation(
+    function setAllowedDeviationNumerator(
         address rateFeedId,
-        uint16 allowedDeviation
+        uint16 allowedDeviationNumerator
     ) external;
 
     /**
@@ -204,7 +206,7 @@ interface IOracles {
      * @notice Returns the current configuration parameters for a rate feed.
      * @param rateFeedId The rate feed being queried.
      * @return priceWindowSize           The number of most recent median prices to average over for the final reported price.
-     * @return allowedDeviation          The maximum allowed deviation between the lowest and highest price values in a price report.
+     * @return allowedDeviationNumerator The maximum allowed deviation between the lowest and highest price values in a price report.
      * @return quorum                    The minimum number of values per report.
      * @return certaintyThreshold        The minimum number of certain values per report.
      * @return allowedStalenessInSeconds The allowed staleness in seconds.
@@ -216,7 +218,7 @@ interface IOracles {
         view
         returns (
             uint8 priceWindowSize,
-            uint16 allowedDeviation,
+            uint16 allowedDeviationNumerator,
             uint8 quorum,
             uint8 certaintyThreshold,
             uint16 allowedStalenessInSeconds

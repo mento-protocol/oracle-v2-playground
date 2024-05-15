@@ -63,13 +63,18 @@ contract Oracles_setPriceWindowSize is OraclesTest {
     */
 }
 
-contract Oracles_setAllowedDeviation is OraclesTest {
-    function testFuzz_setsAllowedDeviation(uint16 allowedDeviation) public {
-        oracles.setAllowedDeviation(aRateFeed, allowedDeviation);
-        (, uint16 realAllowedDeviation, , , ) = oracles.rateFeedConfig(
+contract Oracles_setAllowedDeviationNumerator is OraclesTest {
+    function testFuzz_setsAllowedDeviationNumerator(
+        uint16 allowedDeviationNumerator
+    ) public {
+        oracles.setAllowedDeviationNumerator(
+            aRateFeed,
+            allowedDeviationNumerator
+        );
+        (, uint16 realAllowedDeviationNumerator, , , ) = oracles.rateFeedConfig(
             aRateFeed
         );
-        assertEq(realAllowedDeviation, allowedDeviation);
+        assertEq(realAllowedDeviationNumerator, allowedDeviationNumerator);
     }
 
     /*
@@ -153,14 +158,14 @@ contract Oracles_addRateFeed is OraclesTest {
 
         (
             uint8 realWindowSize,
-            uint16 realAllowedDeviation,
+            uint16 realAllowedDeviationNumerator,
             uint8 realQuorum,
             uint8 realCertaintyThreshold,
             uint16 realAllowedStaleness
         ) = oracles.rateFeedConfig(anotherRateFeed);
 
         assertEq(realWindowSize, 2);
-        assertEq(realAllowedDeviation, 100);
+        assertEq(realAllowedDeviationNumerator, 100);
         assertEq(realQuorum, 5);
         assertEq(realCertaintyThreshold, 2);
         assertEq(realAllowedStaleness, 120);
@@ -184,7 +189,7 @@ contract Oracles_removeRateFeed is OraclesTest {
         oracles.addRateFeed({
             rateFeedId: _anotherRateFeed,
             priceWindowSize: 2,
-            allowedDeviation: 100,
+            allowedDeviationNumerator: 100,
             quorum: 5,
             certaintyThreshold: 3,
             allowedStalenessInSeconds: 120,
