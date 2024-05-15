@@ -65,9 +65,11 @@ contract OracleValueLibTest is Test {
         assertEq(OracleValue.unwrap(c), x + y);
     }
 
-    function testFuzz_addFail(uint64 x, uint64 y) public {
-        vm.assume(x > type(uint64).max / 2);
-        vm.assume(y > type(uint64).max / 2);
+    function testFuzz_addFail(uint64 _x, uint64 _y) public {
+        // Get two numbers that when added together will overflow uint64. Using
+        // vm.assume resulted in "cheatcode rejected too many inputs".
+        uint64 x = _x / 2 + type(uint64).max / 2 + 1;
+        uint64 y = _y / 2 + type(uint64).max / 2 + 1;
         OracleValue a = OracleValueLib.wrap(x);
         OracleValue b = OracleValueLib.wrap(y);
 
@@ -100,8 +102,8 @@ contract OracleValueLibTest is Test {
         assertTrue(a.geq(b));
     }
 
-    function testFuzz_geqEqual(uint64 x, uint64 y) public pure {
-        vm.assume(x == y);
+    function testFuzz_geqEqual(uint64 x) public pure {
+        uint64 y = x;
         OracleValue a = OracleValueLib.wrap(x);
         OracleValue b = OracleValueLib.wrap(y);
 
