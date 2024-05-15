@@ -32,7 +32,7 @@ contract Oracles is IOracles, RedstoneConsumerNumericBase {
         uint8 priceWindowSize;
 
         /// @dev The maximal allowed deviation between reported prices within a batch, expressed as a factor < 1.
-        uint16 allowedDeviation;
+        uint16 allowedDeviationNumerator;
 
         /// @dev The minimal number of data providers that need to have reported a value in the last report.
         uint8 quorum;
@@ -128,9 +128,9 @@ contract Oracles is IOracles, RedstoneConsumerNumericBase {
         uint8 priceWindowSize
     ) external {}
 
-    function setAllowedDeviation(
+    function setAllowedDeviationNumerator(
         address rateFeedId,
-        uint16 allowedDeviation
+        uint16 allowedDeviationNumerator
     ) external {}
 
     function setQuorum(address rateFeedId, uint8 quorum) external {}
@@ -148,7 +148,7 @@ contract Oracles is IOracles, RedstoneConsumerNumericBase {
     function addRateFeed(
         address rateFeedId,
         uint8 priceWindowSize,
-        uint16 allowedDeviation,
+        uint16 allowedDeviationNumerator,
         uint8 quorum,
         uint8 certaintyThreshold,
         uint16 allowedStalenessInSeconds,
@@ -194,7 +194,7 @@ contract Oracles is IOracles, RedstoneConsumerNumericBase {
         view
         returns (
             uint8 priceWindowSize,
-            uint16 allowedDeviation,
+            uint16 allowedDeviationNumerator,
             uint8 quorum,
             uint8 certaintyThreshold,
             uint16 allowedStaleness
@@ -203,7 +203,7 @@ contract Oracles is IOracles, RedstoneConsumerNumericBase {
         RateFeedDetails memory details = _rateFeeds[rateFeedId].details;
         return (
             details.priceWindowSize,
-            details.allowedDeviation,
+            details.allowedDeviationNumerator,
             details.quorum,
             details.certaintyThreshold,
             details.allowedStaleness
@@ -290,7 +290,7 @@ contract Oracles is IOracles, RedstoneConsumerNumericBase {
             );
         }
 
-        if ((maxVal - minVal) > rateFeed.details.allowedDeviation) {
+        if ((maxVal - minVal) > rateFeed.details.allowedDeviationNumerator) {
             revert MinAndMaxValuesDeviateTooMuch(minVal, maxVal);
         }
 
