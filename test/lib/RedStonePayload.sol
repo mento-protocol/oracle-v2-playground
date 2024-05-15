@@ -1,12 +1,18 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.8.24;
 
+import {Vm} from "forge-std/Vm.sol";
+
 /**
  * @notice Implements serialization to a RedStone data payload.
  * @dev Reference:
  * https://github.com/redstone-finance/redstone-oracles-monorepo/tree/main/packages/protocol/src
  */
 library RedStonePayload {
+    // See https://book.getfoundry.sh/forge/cheatcodes
+    address private constant CHEATCODE_ADDRESS = 0x7109709ECfa91a80626fF3989D68f67F5b1DD12D;
+    Vm private constant vm = Vm(CHEATCODE_ADDRESS);
+
     struct SerializationBuffer {
         bytes buffer;
         uint256 currentIndex;
@@ -84,6 +90,68 @@ library RedStonePayload {
     // batch, but our model assumes each batch is for a single data feed.
     uint256 private constant DATA_POINTS_PER_PACKAGE = 1;
 
+    function signDataPackage(
+        DataPackage memory dataPackage,
+        uint256 privateKey
+    ) internal pure returns (Signature memory) {
+       uint256 dataPackageSerializedSize =
+            DATA_POINTS_COUNT_BS +
+            DATA_POINT_VALUE_BYTE_SIZE_BS +
+            TIMESTAMP_BS +
+            DATA_POINTS_PER_PACKAGE * (
+                DATA_FEED_ID_BS +
+                DEFAULT_NUM_VALUE_BS
+            );
+        SerializationBuffer memory buffer = newSerializationBuffer(dataPackageSerializedSize);
+        writeDataPackage(buffer, dataPackage);
+        bytes32 digest = keccak256(buffer.buffer);
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(privateKey, digest);
+        return Signature(r, s, v);
+    }
+
+    function makeDataPackage(
+        bytes32 dataFeedId,
+        uint256 value,
+        uint256 timestamp
+    ) internal pure returns (DataPackage memory) {
+        DataPoint[] memory dataPoints = new DataPoint[](1);
+        dataPoints[0] = DataPoint(
+            dataFeedId,
+            value,
+            DEFAULT_NUM_VALUE_DECIMALS,
+            DEFAULT_NUM_VALUE_BS
+        );
+        return DataPackage(
+            dataPoints,
+            timestamp
+        );
+    }
+
+    function makePayload(
+        bytes32 dataFeedId,
+        uint256[] memory values,
+        uint256[] memory privateKeys,
+        uint256[] memory timestamps
+    ) internal pure returns (Payload memory) {
+        Payload memory payload;
+
+        uint256 numberPackages = values.length;
+
+        payload.dataPackages = new SignedDataPackage[](numberPackages);
+
+        for (uint256 i = 0; i < numberPackages; i++) {
+            DataPackage memory dataPackage = makeDataPackage(
+                dataFeedId,
+                values[i],
+                timestamps[i]
+            );
+            Signature memory signature = signDataPackage(dataPackage, privateKeys[i]);
+            payload.dataPackages[i] = SignedDataPackage(dataPackage, signature);
+        }
+
+        return payload;
+    }
+
     function makePayload(
         bytes32 dataFeedId,
         uint256[] memory values,
@@ -99,10 +167,9 @@ library RedStonePayload {
         payload.dataPackages = new SignedDataPackage[](numberPackages);
 
         for (uint256 i = 0; i < numberPackages; i++) {
-            DataPoint[] memory dataPoints = new DataPoint[](1);
-            dataPoints[0] = DataPoint(dataFeedId, values[i], 18, 8);
-            DataPackage memory dataPackage = DataPackage(
-                dataPoints,
+            DataPackage memory dataPackage = makeDataPackage(
+                dataFeedId,
+                values[i],
                 timestamps[i]
             );
             Signature memory signature = Signature(rs[i], ss[i], vs[i]);
@@ -190,17 +257,23 @@ library RedStonePayload {
         writeNumber(buffer, signature.v, 1);
     }
 
-    function writeSignedDataPackage(
+    function writeDataPackage(
         SerializationBuffer memory buffer,
-        SignedDataPackage memory signedDataPackage
+        DataPackage memory dataPackage
     ) internal pure {
-        DataPackage memory dataPackage = signedDataPackage.dataPackage;
         for (uint256 i = 0; i < dataPackage.dataPoints.length; i++) {
             writeDataPoint(buffer, dataPackage.dataPoints[i]);
         }
         writeTimestamp(buffer, dataPackage.timestampMilliseconds);
         writeDataPointSize(buffer);
         writeDataPointNumber(buffer, dataPackage.dataPoints.length);
+    }
+
+    function writeSignedDataPackage(
+        SerializationBuffer memory buffer,
+        SignedDataPackage memory signedDataPackage
+    ) internal pure {
+        writeDataPackage(buffer, signedDataPackage.dataPackage);
         writeSignature(buffer, signedDataPackage.signature);
     }
 
